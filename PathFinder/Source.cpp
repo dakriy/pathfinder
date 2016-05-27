@@ -1,6 +1,7 @@
 #include<iostream>
 #include<string>
 #include<vector>
+#include"Globals.h"
 
 using namespace std;
 
@@ -9,7 +10,7 @@ using namespace std;
 int main()
 {
 
-	int Maze[10][10] = //Y //X
+	vector<vector<int>>  Maze = //Y //X
 	{
 		{ 1,0,0,1,1 },
 		{ 1,1,1,0,1 },
