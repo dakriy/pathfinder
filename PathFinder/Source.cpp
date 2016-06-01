@@ -2,6 +2,7 @@
 #include<string>
 #include<vector>
 #include"Globals.h"
+#include "PathFinder.h"
 
 using namespace std;
 
@@ -25,6 +26,30 @@ int main()
 	};
 
 	Coordinate BeginMaze = Coordinate(0,0);
-	Coordinate EndMaze = Coordinate(10,10);
+	Coordinate EndMaze = Coordinate(4,9);
 
+	PathFinder A = PathFinder(Maze, BeginMaze, EndMaze);
+	Branch *Root = &Branch();
+
+	vector<Coordinate> Path;
+	Path.push_back(BeginMaze);
+
+	A.BranchAll(BeginMaze, Path, Root);
+
+	Path = A.GetShortest();
+
+	cout << Path.size() << endl;
+
+	//Display Path!
+	for (int i = 0; i < Path.size(); i++)
+	{
+		cout << "X: " << Path[i].X << "Y: " << Path[i].Y << endl;
+	}
+
+
+	//Pauses Program
+	system("PAUSE");
+
+	//Ends Program
+	return 0;
 }

@@ -16,4 +16,19 @@ struct Coordinate
 	int Y;
 };
 
+struct Branch
+{
+	//Points to the left branch
+	Branch* Left = NULL;
+
+	//Points to the right branch
+	Branch* Right = NULL;
+
+	//Data defaults to negative 1
+	int Data = -1;
+
+	//Coordinate of the branch.
+	Coordinate Pos = Coordinate();
+};
+
 #endif
