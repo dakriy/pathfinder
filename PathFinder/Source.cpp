@@ -29,12 +29,16 @@ int main()
 	Coordinate EndMaze = Coordinate(4,9);
 
 	PathFinder A = PathFinder(Maze, BeginMaze, EndMaze);
-	Branch *Root = &Branch();
+
+	
+	Branch Root(BeginMaze);
+
+	Branch *RealRoot = &Root;
 
 	vector<Coordinate> Path;
 	Path.push_back(BeginMaze);
 
-	A.BranchAll(BeginMaze, Path, Root);
+	A.BranchAll(BeginMaze, Path, RealRoot);
 
 	Path = A.GetShortest();
 

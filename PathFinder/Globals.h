@@ -18,17 +18,27 @@ struct Coordinate
 
 struct Branch
 {
+
+	Branch(Coordinate a = Coordinate())
+	{
+		Left = NULL;
+		Right = NULL;
+		Data = -1;
+		Pos = a;
+	}
+
 	//Points to the left branch
-	Branch* Left = NULL;
+	Branch* Left;
+
 
 	//Points to the right branch
-	Branch* Right = NULL;
+	Branch* Right;
 
 	//Data defaults to negative 1
-	int Data = -1;
+	int Data;
 
 	//Coordinate of the branch.
-	Coordinate Pos = Coordinate();
+	Coordinate Pos;
 };
 
 #endif
