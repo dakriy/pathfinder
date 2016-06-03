@@ -19,10 +19,13 @@ struct Coordinate
 struct Branch
 {
 
-	Branch(Coordinate a = Coordinate())
+	Branch(Coordinate a)
 	{
 		Left = NULL;
 		Right = NULL;
+		Up = NULL;
+		Down = NULL;
+
 		Data = -1;
 		Pos = a;
 	}
@@ -30,15 +33,20 @@ struct Branch
 	//Points to the left branch
 	Branch* Left;
 
-
 	//Points to the right branch
 	Branch* Right;
 
+	//Points down
+	Branch* Down;
+
+	//Points up
+	Branch* Up;
+
 	//Data defaults to negative 1
-	int Data;
+	int Data = -1;
 
 	//Coordinate of the branch.
-	Coordinate Pos;
+	Coordinate Pos = Coordinate();
 };
 
 #endif

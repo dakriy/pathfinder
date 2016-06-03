@@ -2,6 +2,16 @@
 #include "Globals.h"
 
 
+PathFinder::PathFinder()
+{
+}
+
+
+PathFinder::~PathFinder()
+{
+}
+
+
 PathFinder::PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end)
 {
 	Maze = maze;
@@ -10,196 +20,325 @@ PathFinder::PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coo
 }
 
 
-std::vector<Coordinate> PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Branch* StartingBranch)
+void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Branch* StartingBranch)
 {
-	std::cout << "RUN!" << std::endl;
-	std::cout << "X:" << Start.X << "Y:" << Start.Y << std::endl;
-	std::cout << AllPaths.size() << std::endl;
+	//system("PAUSE");
+	//std::cout << "RUN!" << std::endl;
+	//std::cout << "X:" << Start.X << "Y:" << Start.Y << "  ACTUAL" << std::endl;
+	//std::cout << "X Check: " << EndOfMaze.X << " Y Check: " << EndOfMaze.Y << std::endl;
+	//std::cout << "All Paths Size: " << AllPaths.size() << std::endl;
 	bool Continue = true;
 
 	//CoordList of this versions path
-	std::vector<Coordinate> Path;
-	Path.swap(OldPath);//duplicates
+	std::vector<Coordinate> Path = OldPath;
 
-					   //Actually add coordinates to the path...
+	for (int i = 0; i < Path.size(); i++)
+	{
+		//std::cout << "(" << Path[i].X << "," << Path[i].Y << ")" << std::endl;
+	}
+
+	//Actually add coordinates to the path...
 	Path.push_back(Start);
+
+
+
+		//Check it's not at the end!
+
+				//Create New Branches Everywhere! 
+
+				//Check all directions around coordinate
+				//Check up of start
+
+
+				//Check up of start; Check if block above start is valid (within maze) then checks if it is enterable or not
+				if (CheckValidCoordinates(Coordinate(Start.X, Start.Y + 1)) == true && Maze[Start.Y + 1][Start.X] == 1)
+				{
+					if (PathContains(Coordinate(Start.X, Start.Y + 1), Path) == false)
+					{
+						//Begin New Branch with coordinate in it
+						Branch *Up = new Branch(Coordinate(Start.X, Start.Y + 1));
+						StartingBranch->Up = Up;
+
+
+						//Is enterable
+						StartingBranch->Up->Data = 1;
+
+
+						//Begin Again!
+						BranchAll(Coordinate(Start.X, Start.Y + 1), Path, StartingBranch->Up);
+					}
+				}
+
+
+				//Check down of start
+
+				//Check up of start; Check if block above start is valid (within maze) then checks if it is enterable or not
+				if (CheckValidCoordinates(Coordinate(Start.X, Start.Y - 1)) == true && Maze[Start.Y - 1][Start.X] == 1)
+				{
+
+					if (PathContains(Coordinate(Start.X, Start.Y - 1), Path) == false)
+					{
+						//Begin New Branch with coordinate in it
+						Branch *Down = new Branch(Coordinate(Start.X, Start.Y - 1));
+						StartingBranch->Down = Down;
+
+
+						//Is enterable
+						StartingBranch->Down->Data = 1;
+
+
+
+						//Begin Again!
+						BranchAll(Coordinate(Start.X, Start.Y - 1), Path, StartingBranch->Down);
+
+					}
+				}
+
+				//Check left of start
+				if (CheckValidCoordinates(Coordinate(Start.X - 1, Start.Y)) == true && Maze[Start.Y][Start.X - 1] == 1)
+				{
+					if (PathContains(Coordinate(Start.X - 1, Start.Y), Path) == false)
+					{
+						//Begin New Branch with coordinate in it
+						Branch *Left = new Branch(Coordinate(Start.X - 1, Start.Y));
+						StartingBranch->Left = Left;
+
+						//Is enterable
+						StartingBranch->Left->Data = 1;
+
+						//Begin Again!
+						BranchAll(Coordinate(Start.X - 1, Start.Y), Path, StartingBranch->Left);
+					}
+
+				}
+
+
+				//Check right of start
+				if (CheckValidCoordinates(Coordinate(Start.X + 1, Start.Y)) == true && Maze[Start.Y][Start.X + 1] == 1)
+				{
+					if (PathContains(Coordinate(Start.X + 1, Start.Y), Path) == false)
+					{
+						//Begin New Branch with coordinate in it 
+						Branch *Right = new Branch(Coordinate(Start.X + 1, Start.Y));
+						StartingBranch->Right = Right;
+
+						//Is enterable
+						StartingBranch->Right->Data = 1;
+
+						//Begin Again!
+						BranchAll(Coordinate(Start.X + 1, Start.Y), Path, StartingBranch->Right);
+					}
+				}
+
+				if (PathContains(EndOfMaze, Path) == true)
+				{
+					AllPaths.push_back(Path);
+				}
+
+
+			
+
+	
+}
+
+
+
+//Run to find shortest path in maze! DANGER RECURSIVE!
+
+/*
+std::vector<Coordinate*> BranchAll(Coordinate Start, std::vector<Coordinate*> OldPath, Branch* StartingBranch)
+{
+
+
+
+	std::cout << "RUN!" << std::endl;
+	std::cout << "X:" << Start.X << "Y:" << Start.Y << "  ACTUAL" << std::endl;
+	std::cout << "All Paths Size: " << AllPaths.size() << std::endl;
+	bool Continue = true;
+
+	//CoordList of this versions path
+	std::vector<Coordinate*> Path;
+
+	for (int i = 0; i < OldPath.size(); i++)
+	{
+		Path.push_back(OldPath[i]);
+	}
+
+	//Actually add coordinates to the path...
+	Path.push_back(&Start);
 
 	//SYNTAX!!!
 	//Check that this has not already been visited, if it has it will stop adding paths and return what it has
 	int TimesVisited = 0;
 	for (int i = 0; i < Path.size(); i++)
 	{
-		if (Path[i].X == Start.X && Path[i].Y == Start.Y)
+		if (Path[i]->X == Start.X && Path[i]->Y == Start.Y)
 		{
 			TimesVisited++;
 		}
 	}
 
 	//Efficiency possibly improved here?
-	if (TimesVisited > 2)
+	if (TimesVisited > 3)
 	{
+		std::cout << "No Continue Granted!" << std::endl;
+
 		return Path;
 	}
+
 
 
 	//Check it's not at the end!
 	if (Start.X != EndOfMaze.X && Start.Y != EndOfMaze.Y)
 	{
+		//Create New Branches Everywhere! 
+
+		//Begin New Branch with coordinate in it
+		Branch *Up = new Branch(Coordinate(Start.X, Start.Y + 1));
+		StartingBranch->Up = Up;
+
+		//Begin New Branch with coordinate in it
+		Branch *Down = new Branch(Coordinate(Start.X, Start.Y - 1));
+		StartingBranch->Down = Down;
+
+
+		//Begin New Branch with coordinate in it
+		Branch *Left = new Branch(Coordinate(Start.X - 1, Start.Y));
+		StartingBranch->Left = Left;
+
+		//Begin New Branch with coordinate in it 
+		Branch *Right = new Branch(Coordinate(Start.X + 1, Start.Y));
+		StartingBranch->Right = Right;
+
+		if (Up == NULL || Down == NULL || Left == NULL || Right == NULL)
+		{
+			std::cout << "ERROR!!!!! ERMGAGHERD ITS NULL!!!!!!!" << std::endl;
+		}
 
 		//Check all directions around coordinate
 		//Check up of start
 
-
 		//Check up of start; Check if block above start is valid (within maze) then checks if it is enterable or not
-
 		if (CheckValidCoordinates(Coordinate(Start.X, Start.Y + 1)) == true && Maze[Start.Y + 1][Start.X] == 1)
 		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Left = new Branch(Coordinate(Start.X, Start.Y + 1));
 
 			//Is enterable
-			StartingBranch->Left->Data = 1;
+			StartingBranch->Up->Data = 1;
 
 
 			//Begin Again!
-			std::cout << "Got to left" << std::endl;
-			AllPaths.push_back(BranchAll(Coordinate(Start.X, Start.Y + 1), Path, StartingBranch->Left));
+			AllPaths.push_back(BranchAll(Coordinate(Start.X, Start.Y + 1), Path, StartingBranch->Up));
 
 		}
-		else if (CheckValidCoordinates(Coordinate(Start.X, Start.Y + 1)) == true && Maze[Start.Y + 1][Start.X] == 0)
-		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Left = new Branch(Coordinate(Start.X, Start.Y + 1));
-
-			StartingBranch->Left->Data = 0;
-		}
-
 
 
 		//Check down of start
 
-		std::cout << "X:" << Start.X << "Y:" << Start.Y << std::endl;
-
 		//Check up of start; Check if block above start is valid (within maze) then checks if it is enterable or not
 		if (CheckValidCoordinates(Coordinate(Start.X, Start.Y - 1)) == true && Maze[Start.Y - 1][Start.X] == 1)
 		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Right = new Branch(Coordinate(Start.X, Start.Y - 1));
+
+
+
 
 			//Is enterable
-			StartingBranch->Right->Data = 1;
+			StartingBranch->Down->Data = 1;
 
-			/*
+			
 			Another classic case is having a bad "this" pointer, usually NULL or a low value.
 			That happens when the object reference on which you call the method is bad.
 			The method will run as usual but blow up as soon as it tries to access a class member.
 			Again, heap corruption or using a pointer that was deleted will cause this.
 			Good luck debugging this; it is never easy.
-			*/
-
-			if (StartingBranch->Right == NULL)
-			{
-				std::cout << "ERROR!!!!" << std::endl;
-			}
-			else
-			{
-				std::cout << "Checked." << std::endl;
-			}
+			
 
 			//Begin Again!
-			std::cout << "Got to right" << std::endl;
-			AllPaths.push_back(this->BranchAll(Coordinate(Start.X, Start.Y - 1), Path, StartingBranch->Right));
+			AllPaths.push_back(BranchAll(Coordinate(Start.X, Start.Y - 1), Path, StartingBranch->Down));
 
 
-
-		}
-		else if (CheckValidCoordinates(Coordinate(Start.X, Start.Y - 1)) == true && Maze[Start.Y + 1][Start.X] == 0)
-		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Right = new Branch(Coordinate(Start.X, Start.Y - 1));
-
-			StartingBranch->Right->Data = 0;
 		}
 
 
 
 		//Check left of start
-
-
-
 		if (CheckValidCoordinates(Coordinate(Start.X - 1, Start.Y)) == true && Maze[Start.Y][Start.X - 1] == 1)
 		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Left->Left = new Branch(Coordinate(Start.X - 1, Start.Y));
+
 
 			//Is enterable
-			StartingBranch->Left->Left->Data = 1;
+			StartingBranch->Left->Data = 1;
+
+			//std::cout << "AllPaths[AllPaths.size()].size() = " << AllPaths[AllPaths.size()].size() << std::endl;
+			//std::cout << "AllPaths.size() = " << AllPaths.size() << std::endl;
 
 			//Begin Again!
-			AllPaths.push_back(BranchAll(Coordinate(Start.X - 1, Start.Y), Path, StartingBranch->Left->Left));
-		}
-		else if (CheckValidCoordinates(Coordinate(Start.X - 1, Start.Y)) == true && Maze[Start.Y + 1][Start.X] == 0)
-		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Left->Left = new Branch(Coordinate(Start.X - 1, Start.Y));
+			std::vector<Coordinate*> Returner = BranchAll(Coordinate(Start.X - 1, Start.Y), Path, StartingBranch->Left);
 
-			StartingBranch->Left->Left->Data = 0;
+			Returner.size();
+
+			AllPaths.push_back(Returner);
 		}
 
 
-
+		//Check right of start
 		if (CheckValidCoordinates(Coordinate(Start.X + 1, Start.Y)) == true && Maze[Start.Y][Start.X + 1] == 1)
 		{
-			//Check right of start
-			StartingBranch->Right->Right = new Branch(Coordinate(Start.X + 1, Start.Y));
+
 
 			//Is enterable
-			StartingBranch->Right->Right->Data = 1;
+			StartingBranch->Right->Data = 1;
 
 			//Begin Again!
-			AllPaths.push_back(BranchAll(Coordinate(Start.X + 1, Start.Y), Path, StartingBranch->Right->Right));
+			AllPaths.push_back(BranchAll(Coordinate(Start.X + 1, Start.Y), Path, StartingBranch->Right));
 		}
-		else if (CheckValidCoordinates(Coordinate(Start.X + 1, Start.Y)) == true && Maze[Start.Y + 1][Start.X] == 0)
-		{
-			//Begin New Branch with coordinate in it
-			StartingBranch->Right->Right = new Branch(Coordinate(Start.X + 1, Start.Y));
 
-			StartingBranch->Right->Right->Data = 0;
-		}
+
 
 	}
 	else
 	{
 		std::cout << "Returning Path Size of: " << Path.size() << std::endl;
+
+
+		for (int i = 0; i < Path.size(); i++)
+		{
+			std::cout << "X:" << Path[i]->X << "Y:" << Path[i]->Y << std::endl;
+			std::cout << "Number: " << i << " of a total of " << Path.size() << std::endl;
+		}
+
+		//Return Psuedo Path
+
 		return Path;
+
 	}
-}
+}*/
 
 
-std::vector<Coordinate> PathFinder::GetShortest()
+
+std::vector<Coordinate> PathFinder::GetShortest(Coordinate EndOfMaze)
 {
-	int PositionOfShortest = 0;
 	std::vector<Coordinate> Shortest;
+
+	Shortest = AllPaths[0];
 
 	for (int y = 0; y < AllPaths.size(); y++)
 	{
 		for (int x = 0; x < AllPaths[y].size(); x++)
 		{
-			if (Shortest.size() == 0)
+			if (AllPaths[y][x].X == EndOfMaze.X && AllPaths[y][x].Y == EndOfMaze.Y)
 			{
-
-			}
-			else if (AllPaths[y].size() < Shortest.size())
-			{
-				Shortest = AllPaths[y];
+				if (Shortest.size() >= AllPaths[y].size())
+				{
+					Shortest = AllPaths[y];
+				}
 			}
 		}
 	}
 
 	return Shortest;
-
 }
 
+//Checks if coordinates are indeed inside maze
 bool PathFinder::CheckValidCoordinates(Coordinate a)
 {
 	//Make sure Maze[0] actually exists first ^_^
@@ -207,10 +346,10 @@ bool PathFinder::CheckValidCoordinates(Coordinate a)
 	{
 		if (a.X >= 0 && a.X <= Maze[0].size() - 1)//Check column size
 		{
-			std::cout << "Comparing X:" << a.X << " to maze max of " << Maze[0].size() << std::endl;
+			//std::cout << "Comparing X:" << a.X << " to maze max of " << Maze[0].size() << std::endl;
 			if (a.Y >= 0 && a.Y <= Maze.size() - 1)//Check row size
 			{
-				std::cout << "Comparing Y:" << a.Y << " to maze max of " << Maze.size() << std::endl;
+				//std::cout << "Comparing Y:" << a.Y << " to maze max of " << Maze.size() << std::endl;
 				return true;
 			}
 			else
@@ -218,14 +357,23 @@ bool PathFinder::CheckValidCoordinates(Coordinate a)
 				return false;
 			}
 		}
-		else
-		{
-			return false;
-		}
 	}
+
+	return false;
 }
 
-
-PathFinder::~PathFinder()
+bool PathFinder::PathContains(Coordinate a,std::vector<Coordinate> b)
 {
+	for (int i = 0; i < b.size(); i++)
+	{
+		if (b[i].X == a.X)
+		{
+			if (b[i].Y == a.Y)
+			{
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
