@@ -91,6 +91,7 @@ int main()
 		}
 	}
 
+	A.NavDeepDelete(RealRoot);
 
 	//Pauses Program
 	system("PAUSE");

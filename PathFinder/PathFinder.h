@@ -20,6 +20,8 @@ public:
 	std::vector<std::vector<Coordinate>> AllPaths;
 
 
+	bool NavDeepDelete(Branch *Check);
+
 	std::vector<Coordinate> GetShortest(Coordinate EndOfMaze);
 
 	bool PathContains(Coordinate a, std::vector<Coordinate> b);

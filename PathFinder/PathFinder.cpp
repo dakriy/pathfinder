@@ -9,8 +9,36 @@ PathFinder::PathFinder()
 
 PathFinder::~PathFinder()
 {
+
+	
+
 }
 
+bool PathFinder::NavDeepDelete(Branch *Check)
+{
+	// this deallocates the memory
+
+	bool u = false;
+	bool d = false;;
+	bool l = false;
+	bool r = false;;
+
+	while (true)
+	{
+		NavDeepDelete(Check->Up);
+		NavDeepDelete(Check->Down);
+		NavDeepDelete(Check->Left);
+		NavDeepDelete(Check->Right);
+	}
+
+	if (u == true && d == true && l == true && r == true)
+	{
+		std::cout << "Deleted a branch!" << std::endl;
+		delete Check;
+		return true;
+	}
+
+}
 
 PathFinder::PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end)
 {
@@ -27,7 +55,7 @@ void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Br
 	//std::cout << "X:" << Start.X << "Y:" << Start.Y << "  ACTUAL" << std::endl;
 	//std::cout << "X Check: " << EndOfMaze.X << " Y Check: " << EndOfMaze.Y << std::endl;
 	//std::cout << "All Paths Size: " << AllPaths.size() << std::endl;
-	bool Continue = true;
+
 
 	//CoordList of this versions path
 	std::vector<Coordinate> Path = OldPath;
@@ -135,8 +163,6 @@ void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Br
 					AllPaths.push_back(Path);
 				}
 
-
-			
 
 	
 }

@@ -30,6 +30,14 @@ struct Branch
 		Pos = a;
 	}
 
+	~Branch()
+	{
+		delete Left;
+		delete Right;
+		delete Up;
+		delete Down;
+	}
+
 	//Points to the left branch
 	Branch* Left;
 
