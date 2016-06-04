@@ -6,10 +6,10 @@
 
 class PathFinder
 {
+protected:
+	Branch * TreeRoot;
 public:
-	PathFinder();
-	~PathFinder();
-	PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end);
+	PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end, Branch * Root);
 
 
 	std::vector<std::vector<int>> Maze;
@@ -34,6 +34,6 @@ public:
 	
 	//Checks if coordinates are indeed inside maze
 	bool CheckValidCoordinates(Coordinate a);
-	
+	~PathFinder();
 };
 

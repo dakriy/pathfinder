@@ -1,50 +1,39 @@
 #include "PathFinder.h"
 #include "Globals.h"
 
-
-PathFinder::PathFinder()
-{
-}
-
-
 PathFinder::~PathFinder()
 {
-
-	
-
+	this->NavDeepDelete(this->TreeRoot);
 }
 
 bool PathFinder::NavDeepDelete(Branch *Check)
 {
-	// this deallocates the memory
-
-	bool u = false;
-	bool d = false;;
-	bool l = false;
-	bool r = false;;
-
-	while (true)
+	if (Check)
 	{
-		NavDeepDelete(Check->Up);
-		NavDeepDelete(Check->Down);
-		NavDeepDelete(Check->Left);
-		NavDeepDelete(Check->Right);
+		if(
+			this->NavDeepDelete(Check->Up) && 
+			this->NavDeepDelete(Check->Down) && 
+			this->NavDeepDelete(Check->Left) && 
+			this->NavDeepDelete(Check->Right)
+			)
+		{
+			delete Check;
+			return true;
+		}
+		return false;
 	}
-
-	if (u == true && d == true && l == true && r == true)
+	else
 	{
-		std::cout << "Deleted a branch!" << std::endl;
-		delete Check;
 		return true;
 	}
-
 }
 
-PathFinder::PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end)
+PathFinder::PathFinder(std::vector<std::vector<int>> maze, Coordinate start, Coordinate end, Branch * Root)
 {
 	Maze = maze;
 	StartOfMaze = start;
 	EndOfMaze = end;
+	this->TreeRoot = Root;
 }
 
 

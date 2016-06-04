@@ -40,19 +40,17 @@ int main()
 	Coordinate BeginMaze = Coordinate(0,0);
 	Coordinate EndMaze = Coordinate(6,21);
 
-	PathFinder A = PathFinder(Maze, BeginMaze, EndMaze);
+	// This gets automatically deallocated when the program ends.
+	Branch * Root = new Branch(BeginMaze);
 
-	
-	Branch Root(BeginMaze);
-
-	Branch *RealRoot = &Root;
+	PathFinder MazeSolver = PathFinder(Maze, BeginMaze, EndMaze, Root);
 
 	vector<Coordinate> Path;
 	Path.push_back(BeginMaze);
 
-	A.BranchAll(BeginMaze, Path, RealRoot);
+	MazeSolver.BranchAll(BeginMaze, Path, Root);
 
-	Path = A.GetShortest(EndMaze);
+	Path = MazeSolver.GetShortest(EndMaze);
 
 	cout << "Path Size:" << endl;
 	cout << Path.size() << endl;
@@ -91,7 +89,6 @@ int main()
 		}
 	}
 
-	A.NavDeepDelete(RealRoot);
 
 	//Pauses Program
 	system("PAUSE");
