@@ -124,6 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="PathFinder.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
