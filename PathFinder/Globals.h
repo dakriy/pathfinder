@@ -3,6 +3,7 @@
 #ifndef INCLUDES_HEADERS
 #define INCLUDES_HEADERS
 
+
 struct Coordinate
 {
 
@@ -16,9 +17,10 @@ struct Coordinate
 	int Y;
 };
 
+
+
 struct Branch
 {
-
 	Branch(Coordinate a = Coordinate())
 	{
 		Left = NULL;

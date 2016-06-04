@@ -3,13 +3,20 @@
 #include<vector>
 #include"Globals.h"
 #include "PathFinder.h"
+#include <SFML\System.hpp>
+#include <queue>
 
 using namespace std;
 
-
+// This is the second's thread function.
+void graphics();
 
 int main()
 {
+	std::queue<std::vector<Coordinate>> WorkerQueue;
+	//Start the graphics
+	sf::Thread graphics_thread(&graphics);
+	graphics_thread.launch();
 
 	vector<vector<int>>  Maze = //Y //X
 	{
@@ -95,4 +102,9 @@ int main()
 
 	//Ends Program
 	return 0;
+}
+
+void graphics()
+{
+	
 }
