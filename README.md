@@ -1,5 +1,7 @@
 # Readme!
 
+## FOR SFML SETUP VISIT http://www.sfml-dev.org/tutorials/2.3/start-vc.php
+
 ```
 Thing for our final project
 ```
