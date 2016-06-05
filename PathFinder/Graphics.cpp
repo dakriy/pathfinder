@@ -1,6 +1,4 @@
 #include "Graphics.h"
-#include <algorithm>
-
 
 Graphics::Graphics(std::vector<std::vector<int>> the_maze, Coordinate start, Coordinate end)
 {
@@ -56,18 +54,17 @@ void Graphics::run()
 
 void Graphics::update()
 {
-	if (!WorkerQueue.empty())
+	if (WorkerQueue.empty() && found_shortest_path)
 	{
 		mutex.lock();
-		std::vector<Coordinate> path = WorkerQueue.front();
-		WorkerQueue.pop();
+		std::vector<Coordinate> path = final_path;
 		mutex.unlock();
 		int y = 0;
 		int x = 0;
 		for (int square_counter = 0; square_counter < squares.size(); square_counter++)
 		{
 			if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
-				squares[square_counter]->setFillColor(Color::Red); 
+				squares[square_counter]->setFillColor(Color::Red);
 			}
 			else if (Maze[y][x] == 1)
 			{
@@ -85,10 +82,66 @@ void Graphics::update()
 			}
 		}
 	}
+	else
+	{
+		if (!WorkerQueue.empty())
+		{
+			mutex.lock();
+			std::vector<Coordinate> path = WorkerQueue.front();
+			WorkerQueue.pop();
+			mutex.unlock();
+			int y = 0;
+			int x = 0;
+			for (int square_counter = 0; square_counter < squares.size(); square_counter++)
+			{
+				if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
+					squares[square_counter]->setFillColor(Color::Red);
+				}
+				else if (Maze[y][x] == 1)
+				{
+					squares[square_counter]->setFillColor(Color(211, 211, 211));
+				}
+				else
+				{
+					squares[square_counter]->setFillColor(Color::Black);
+				}
+				x++;
+				if (x > 6)
+				{
+					y++;
+					x = 0;
+				}
+			}
+		}
+		else
+		{
+			// Copy and pasting code! WHEEEE
+			int y = 0;
+			int x = 0;
+			for (int square_counter = 0; square_counter < squares.size(); square_counter++)
+			{
+				if (Maze[y][x] == 1)
+				{
+					squares[square_counter]->setFillColor(Color(211, 211, 211));
+				}
+				else
+				{
+					squares[square_counter]->setFillColor(Color::Black);
+				}
+				x++;
+				if (x > 6)
+				{
+					y++;
+					x = 0;
+				}
+			}
+		}
+	}
 	for (int i = 0; i < squares.size(); i++)
 	{
 		window->draw(*squares[i]);
 	}
+	sleep(milliseconds(path_cycle_speed));
 }
 
 Graphics::~Graphics()

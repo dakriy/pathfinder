@@ -34,6 +34,10 @@ extern bool found_shortest_path;
 
 extern sf::Mutex mutex;
 
+extern int path_cycle_speed;
+
+extern std::vector<Coordinate> final_path;
+
 struct Branch
 {
 	Branch(Coordinate a = Coordinate())
