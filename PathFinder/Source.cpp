@@ -26,7 +26,7 @@ int main()
 	// Path cycle speed in milliseconds. As in 1 every path_cycle_speed ms
 	// NOTE: This does lock up the graphcs thread so don't put it too high or you won't be able to close graphics window
 	// PS: too high would be like 1000. If you're under 500 you're okay.
-	path_cycle_speed = 50;
+	path_cycle_speed = 20;
 
 
 	vector<vector<int>>  Maze = //Y //X
@@ -46,10 +46,10 @@ int main()
 		{ 0,1,1,1,1,1,1 },
 		{ 0,1,0,1,0,0,0 },
 		{ 0,1,1,1,1,1,1 },
-		{ 0,1,0,1,0,0,0 },
+		{ 0,1,0,0,0,0,0 },
 		{ 0,1,0,1,1,1,0 },
 		{ 0,1,1,1,0,1,1 },
-		{ 0,0,1,0,0,0,1 },
+		{ 0,0,0,0,0,0,1 },
 		{ 0,1,1,1,1,1,1 },
 		{ 0,1,0,1,0,0,0 },
 		{ 0,1,1,1,1,1,1 }

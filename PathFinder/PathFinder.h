@@ -16,8 +16,6 @@ public:
 	bool NavDeepDelete(Branch *Check);
 	std::vector<Coordinate> GetShortest(Coordinate EndOfMaze);
 	bool PathContains(Coordinate a, std::vector<Coordinate> b);
-	//Run to find shortest path in maze! DANGER RECURSIVE! Dude... There's nothing wrong with recursive...
-	//std::vector<Coordinate*> BranchAll(Coordinate Start, std::vector<Coordinate*> OldPath, Branch* StartingBranch);
 	void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Branch* StartingBranch);
 	//Checks if coordinates are indeed inside maze
 	bool CheckValidCoordinates(Coordinate a);

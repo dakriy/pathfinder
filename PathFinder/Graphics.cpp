@@ -1,10 +1,45 @@
 #include "Graphics.h"
 
+void Graphics::move_mouse_up()
+{
+	this->Mouse.move(0, -1);
+	this->Mouse.setRotation(-90);
+}
+
+void Graphics::move_mouse_down()
+{
+	this->Mouse.move(0, 1);
+	this->Mouse.setRotation(90);
+}
+
+void Graphics::move_mouse_left()
+{
+	this->Mouse.move(-1, 0);
+	this->Mouse.setRotation(180);
+}
+
+void Graphics::move_mouse_right()
+{
+	this->Mouse.move(1, 0);
+	this->Mouse.setRotation(0);
+}
+
 Graphics::Graphics(std::vector<std::vector<int>> the_maze, Coordinate start, Coordinate end)
 {
 	this->Maze = the_maze;
 	this->StartOfMaze = start;
 	this->EndOfMaze = end;
+	this->sprite_sheet.loadFromFile("mouse_and_cheese_sprite.png");
+
+	Mouse.setTexture(this->sprite_sheet);
+	Mouse.setTextureRect(IntRect(0, 8, 75, 42));
+	this->Mouse.setScale(2.0 / 5.0, 3.0 / 5.0);
+	this->Mouse.setPosition(this->StartOfMaze.X * 30, this->StartOfMaze.Y * 30);
+	this->Mouse.setOrigin(0, 0);
+	Cheese.setTexture(this->sprite_sheet);
+	Cheese.setTextureRect(IntRect(160, 8, 75, 50));
+	this->Cheese.setScale(2.0 / 5.0, 3.0 / 5.0);
+	this->Cheese.setPosition(this->EndOfMaze.X * 30, this->EndOfMaze.Y * 30);
 }
 
 void Graphics::start()
@@ -52,8 +87,10 @@ void Graphics::run()
 	}
 }
 
+
 void Graphics::update()
 {
+	bool draw_cheese = true;
 	if (WorkerQueue.empty() && found_shortest_path)
 	{
 		mutex.lock();
@@ -61,6 +98,7 @@ void Graphics::update()
 		mutex.unlock();
 		int y = 0;
 		int x = 0;
+		
 		for (int square_counter = 0; square_counter < squares.size(); square_counter++)
 		{
 			if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
@@ -81,6 +119,46 @@ void Graphics::update()
 				x = 0;
 			}
 		}
+		if (mouse_pos < path.size())
+		{
+			if(this->Mouse.getPosition().x < path[mouse_pos].X*30)
+			{
+				this->move_mouse_right();
+			}
+			else if (this->Mouse.getPosition().x > path[mouse_pos].X * 30)
+			{
+				this->move_mouse_left();
+			}
+			else if (this->Mouse.getPosition().y < path[mouse_pos].Y * 30)
+			{
+				this->move_mouse_down();
+			}
+			else if (this->Mouse.getPosition().y > path[mouse_pos].Y * 30)
+			{
+				this->move_mouse_up();
+			}
+			else if (this->Mouse.getPosition().x == path[mouse_pos].X * 30 && this->Mouse.getPosition().y == path[mouse_pos].Y * 30)
+			{
+				mouse_pos++;
+			}
+		}
+		else
+		{
+			draw_cheese = false;
+		}
+		if (this->Mouse.getRotation() == 90  || this->Mouse.getRotation() == 180)
+		{
+			this->Mouse.setOrigin(75, 42);
+		}
+		else
+		{
+			this->Mouse.setOrigin(0, 0);
+;		}
+		for (int i = 0; i < squares.size(); i++)
+		{
+			window->draw(*squares[i]);
+		}
+		sleep(milliseconds(20));
 	}
 	else
 	{
@@ -136,12 +214,17 @@ void Graphics::update()
 				}
 			}
 		}
+		sleep(milliseconds(path_cycle_speed));
+		for (int i = 0; i < squares.size(); i++)
+		{
+			window->draw(*squares[i]);
+		}
 	}
-	for (int i = 0; i < squares.size(); i++)
+	if (draw_cheese)
 	{
-		window->draw(*squares[i]);
+		window->draw(Cheese);
 	}
-	sleep(milliseconds(path_cycle_speed));
+	window->draw(Mouse);
 }
 
 Graphics::~Graphics()
