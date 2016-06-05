@@ -2,13 +2,11 @@
 #include <vector>
 #include"Globals.h"
 #include "PathFinder.h"
-#include <SFML\System.hpp>
-#include <SFML/Graphics.hpp>
+#include <SFML/System.hpp>
+#include "Graphics.h"
+#include <SFML/Audio.hpp>
 
 using namespace std;
-
-// This is the second's thread function.
-void graphics(vector<vector<int>>  Maze);
 
 int main()
 {
@@ -38,13 +36,28 @@ int main()
 		{ 0,1,1,1,1,1,1 }
 	};
 
-	//Start the graphics
-	sf::Thread graphics_thread(&graphics, Maze);
+	Coordinate BeginMaze = Coordinate(0, 0);
+	Coordinate EndMaze = Coordinate(6, 21);
+
+	// Setup a new graphics object
+	Graphics * maze_gui = new Graphics(Maze, BeginMaze, EndMaze);
+
+	// Create thread to run the window
+	Thread graphics_thread(&Graphics::start, maze_gui);
+	// start thread and start displaying
 	graphics_thread.launch();
 
-	Coordinate BeginMaze = Coordinate(0,0);
-	Coordinate EndMaze = Coordinate(6,21);
-
+	Music music;
+	music.setLoop(true);
+	music.setVolume(50);
+	if (!music.openFromFile("Newton-Streamline.ogg"))
+	{
+		cout << "There was an error playing the song" << endl;
+	}
+	else
+	{
+		music.play();
+	}
 	// This gets automatically deallocated when the program ends.
 	Branch * Root = new Branch(BeginMaze);
 
@@ -94,53 +107,16 @@ int main()
 		}
 	}
 
-
+	cout << endl;
 	//Pauses Program
 	system("PAUSE");
 
-	//Ends Program
+	// Wait for thread to finish.
+	// if thread gets killed before it finishes execution, thread cleanup will not occur
+	graphics_thread.wait();
+	// Delete the window object
+	delete maze_gui;
+	music.stop();
+	//End Program
 	return 0;
-}
-
-void graphics(vector<vector<int>>  Maze)
-{
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = 8;
-	int y = (Maze.size())*30;
-	int x = (Maze[0].size())*30;
-	sf::RenderWindow window(sf::VideoMode(x, y), "PathFinder", sf::Style::Default, settings);
-	std::vector<sf::RectangleShape *> squares;
-	for (int i = 0; i < Maze.size(); i++)
-	{
-		for (int z = 0; z < Maze[i].size(); z++)
-		{
-			sf::RectangleShape * nextRect = new sf::RectangleShape(sf::Vector2f(30, 30));
-			nextRect->setOutlineColor(sf::Color(0, 191, 255));
-			nextRect->setPosition(z * 30, i * 30);
-			nextRect->setOutlineThickness(2);
-			nextRect->setFillColor(sf::Color::Black);
-			squares.push_back(nextRect);
-		}
-	}
-
-	while (window.isOpen())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-		}
-
-		window.clear();
-		for (int i = 0; i < squares.size(); i++)
-		{
-			window.draw(*squares[i]);
-		}
-		window.display();
-	}
-	for (int i = 0; i < squares.size(); i++)
-	{
-		delete squares[i];
-	}
 }

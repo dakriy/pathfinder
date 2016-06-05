@@ -17,6 +17,15 @@ struct Coordinate
 
 	int X;
 	int Y;
+
+	bool operator==(Coordinate a) const
+	{
+		if (a.X == X && a.Y == Y)
+			return true;
+		else
+			return false;
+	}
+
 };
 
 extern std::queue<std::vector<Coordinate>> WorkerQueue;

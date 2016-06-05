@@ -49,10 +49,10 @@ void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Br
 	//CoordList of this versions path
 	std::vector<Coordinate> Path = OldPath;
 
-	for (int i = 0; i < Path.size(); i++)
-	{
+	//for (int i = 0; i < Path.size(); i++)
+	//{
 		//std::cout << "(" << Path[i].X << "," << Path[i].Y << ")" << std::endl;
-	}
+	//}
 
 	//Actually add coordinates to the path...
 	Path.push_back(Start);
@@ -150,6 +150,9 @@ void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Br
 				if (PathContains(EndOfMaze, Path) == true)
 				{
 					AllPaths.push_back(Path);
+					mutex.lock();
+					WorkerQueue.push(Path);
+					mutex.unlock();
 				}
 
 
