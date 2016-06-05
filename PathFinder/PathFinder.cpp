@@ -57,6 +57,11 @@ void PathFinder::BranchAll(Coordinate Start, std::vector<Coordinate> OldPath, Br
 	//Actually add coordinates to the path...
 	Path.push_back(Start);
 
+	//If it exceeds any first path found, it will delete itself since it knows it's longer and worthless garbage, and it should feel bad about itself!
+	if (AllPaths.size() > 0 && Path.size() >= GetShortest(EndOfMaze).size())
+	{
+		return;
+	}
 
 
 		//Check it's not at the end!

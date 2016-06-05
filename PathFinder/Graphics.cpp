@@ -32,9 +32,9 @@ Graphics::Graphics(std::vector<std::vector<int>> the_maze, Coordinate start, Coo
 	this->sprite_sheet.loadFromFile("mouse_and_cheese_sprite.png");
 
 	Mouse.setTexture(this->sprite_sheet);
-	Mouse.setTextureRect(IntRect(0, 8, 75, 42));
-	this->Mouse.setScale(2.0 / 5.0, 3.0 / 5.0);
-	this->Mouse.setPosition(this->StartOfMaze.X * 30, this->StartOfMaze.Y * 30);
+	Mouse.setTextureRect(IntRect(0, 10, 75, 42));
+	this->Mouse.setScale(2.0 / 6.0, 3.0 / 6.0);
+	this->Mouse.setPosition((this->StartOfMaze.X * 30)+15, (this->StartOfMaze.Y * 30)+15);
 	this->Mouse.setOrigin(0, 0);
 	Cheese.setTexture(this->sprite_sheet);
 	Cheese.setTextureRect(IntRect(160, 8, 75, 50));
@@ -99,6 +99,7 @@ void Graphics::update()
 		int y = 0;
 		int x = 0;
 		
+
 		for (int square_counter = 0; square_counter < squares.size(); square_counter++)
 		{
 			if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
@@ -121,23 +122,23 @@ void Graphics::update()
 		}
 		if (mouse_pos < path.size())
 		{
-			if(this->Mouse.getPosition().x < path[mouse_pos].X*30)
+			if(this->Mouse.getPosition().x < (path[mouse_pos].X*30)+15)
 			{
 				this->move_mouse_right();
 			}
-			else if (this->Mouse.getPosition().x > path[mouse_pos].X * 30)
+			else if (this->Mouse.getPosition().x > (path[mouse_pos].X * 30)+15)
 			{
 				this->move_mouse_left();
 			}
-			else if (this->Mouse.getPosition().y < path[mouse_pos].Y * 30)
+			else if (this->Mouse.getPosition().y < (path[mouse_pos].Y * 30)+15)
 			{
 				this->move_mouse_down();
 			}
-			else if (this->Mouse.getPosition().y > path[mouse_pos].Y * 30)
+			else if (this->Mouse.getPosition().y > (path[mouse_pos].Y * 30)+15)
 			{
 				this->move_mouse_up();
 			}
-			else if (this->Mouse.getPosition().x == path[mouse_pos].X * 30 && this->Mouse.getPosition().y == path[mouse_pos].Y * 30)
+			else if (this->Mouse.getPosition().x == (path[mouse_pos].X * 30)+15 && this->Mouse.getPosition().y == (path[mouse_pos].Y * 30)+15)
 			{
 				mouse_pos++;
 			}
@@ -148,11 +149,11 @@ void Graphics::update()
 		}
 		if (this->Mouse.getRotation() == 90  || this->Mouse.getRotation() == 180)
 		{
-			this->Mouse.setOrigin(75, 42);
+			this->Mouse.setOrigin(75/2, 42/2);
 		}
 		else
 		{
-			this->Mouse.setOrigin(0, 0);
+			this->Mouse.setOrigin(75/2, 42/2);
 ;		}
 		for (int i = 0; i < squares.size(); i++)
 		{
