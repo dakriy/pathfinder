@@ -25,8 +25,11 @@ protected:
 	void move_mouse_right();
 public:
 	Graphics(std::vector<std::vector<int>> the_maze, Coordinate start, Coordinate end);
+	// run the window
 	void run();
+	// update state
 	void update();
+	// do thread constructor stuff
 	void start();
 	~Graphics();
 };

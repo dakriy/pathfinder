@@ -30,12 +30,12 @@ Graphics::Graphics(std::vector<std::vector<int>> the_maze, Coordinate start, Coo
 	this->StartOfMaze = start;
 	this->EndOfMaze = end;
 	this->sprite_sheet.loadFromFile("mouse_and_cheese_sprite.png");
-
+	// Setup Mouse and Cheese
 	Mouse.setTexture(this->sprite_sheet);
 	Mouse.setTextureRect(IntRect(0, 10, 75, 42));
 	this->Mouse.setScale(2.0 / 6.0, 3.0 / 6.0);
 	this->Mouse.setPosition((this->StartOfMaze.X * 30)+15, (this->StartOfMaze.Y * 30)+15);
-	this->Mouse.setOrigin(0, 0);
+	this->Mouse.setOrigin(75 / 2, 42 / 2);
 	Cheese.setTexture(this->sprite_sheet);
 	Cheese.setTextureRect(IntRect(160, 8, 75, 50));
 	this->Cheese.setScale(2.0 / 5.0, 3.0 / 5.0);
@@ -75,6 +75,7 @@ void Graphics::run()
 	while (window->isOpen())
 	{
 		Event event;
+		// Watch for window close
 		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
@@ -91,26 +92,31 @@ void Graphics::run()
 void Graphics::update()
 {
 	bool draw_cheese = true;
+	// if there are no new paths and we have found the shortest path
 	if (WorkerQueue.empty() && found_shortest_path)
 	{
+		// get shortest path
 		mutex.lock();
 		std::vector<Coordinate> path = final_path;
 		mutex.unlock();
 		int y = 0;
 		int x = 0;
 		
-
+		// Print out maze with final path
 		for (int square_counter = 0; square_counter < squares.size(); square_counter++)
 		{
+			// If current square is in the final path paint it red
 			if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
 				squares[square_counter]->setFillColor(Color::Red);
 			}
+			// if it's not in the final path but it's still a moveable tile paint it greyish
 			else if (Maze[y][x] == 1)
 			{
 				squares[square_counter]->setFillColor(Color(211, 211, 211));
 			}
 			else
 			{
+				// if it's not apart of the maze make it black
 				squares[square_counter]->setFillColor(Color::Black);
 			}
 			x++;
@@ -120,6 +126,7 @@ void Graphics::update()
 				x = 0;
 			}
 		}
+		// Deal with moving the mouse
 		if (mouse_pos < path.size())
 		{
 			if(this->Mouse.getPosition().x < (path[mouse_pos].X*30)+15)
@@ -143,47 +150,49 @@ void Graphics::update()
 				mouse_pos++;
 			}
 		}
+		// if the mouse has reached the cheese don't draw the cheese
 		else
 		{
 			draw_cheese = false;
 		}
-		if (this->Mouse.getRotation() == 90  || this->Mouse.getRotation() == 180)
-		{
-			this->Mouse.setOrigin(75/2, 42/2);
-		}
-		else
-		{
-			this->Mouse.setOrigin(75/2, 42/2);
-;		}
+		// Draw squares on screen
 		for (int i = 0; i < squares.size(); i++)
 		{
 			window->draw(*squares[i]);
 		}
+		// Wait for next mouse movement
 		sleep(milliseconds(20));
 	}
 	else
 	{
+		// If there's new paths
 		if (!WorkerQueue.empty())
 		{
+			// get the path
 			mutex.lock();
 			std::vector<Coordinate> path = WorkerQueue.front();
 			WorkerQueue.pop();
 			mutex.unlock();
 			int y = 0;
 			int x = 0;
+			// start displaying tiles
 			for (int square_counter = 0; square_counter < squares.size(); square_counter++)
 			{
+				// if the tile is in the solution path make it red
 				if (std::find(path.begin(), path.end(), Coordinate(x, y)) != path.end()) {
 					squares[square_counter]->setFillColor(Color::Red);
 				}
+				//  if it's not apart of the solution path but apart of the maze make it greyish
 				else if (Maze[y][x] == 1)
 				{
 					squares[square_counter]->setFillColor(Color(211, 211, 211));
 				}
+				// otherwise make it black
 				else
 				{
 					squares[square_counter]->setFillColor(Color::Black);
 				}
+				// counter for syncronizing the linear square vector and the nonlinear maze vector
 				x++;
 				if (x == Maze[0].size())
 				{
@@ -192,35 +201,14 @@ void Graphics::update()
 				}
 			}
 		}
-		else
-		{
-			// Copy and pasting code! WHEEEE
-			int y = 0;
-			int x = 0;
-			for (int square_counter = 0; square_counter < squares.size(); square_counter++)
-			{
-				if (Maze[y][x] == 1)
-				{
-					squares[square_counter]->setFillColor(Color(211, 211, 211));
-				}
-				else
-				{
-					squares[square_counter]->setFillColor(Color::Black);
-				}
-				x++;
-				if (x == Maze[0].size())
-				{
-					y++;
-					x = 0;
-				}
-			}
-		}
+		// wait to get next path
 		sleep(milliseconds(path_cycle_speed));
 		for (int i = 0; i < squares.size(); i++)
 		{
 			window->draw(*squares[i]);
 		}
 	}
+	// if the mouse hasn't gotten to the cheese draw it
 	if (draw_cheese)
 	{
 		window->draw(Cheese);
@@ -230,6 +218,7 @@ void Graphics::update()
 
 Graphics::~Graphics()
 {
+	// deallocate memory
 	delete this->window;
 	for (int i = 0; i < this->squares.size(); i++)
 	{

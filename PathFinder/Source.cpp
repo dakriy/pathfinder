@@ -29,15 +29,16 @@ int main()
 	// NOTE: This does lock up the graphcs thread so don't put it too high or you won't be able to close graphics window
 	// PS: too high would be like 1000. If you're under 500 you're okay.
 	cin >> path_cycle_speed;
-	cout << "Enter the file name for the maze " << endl;
+	cout << "Enter the file name for the maze without the file extension" << endl;
 	string file_path;
 	cin >> file_path;
-	ifstream file(file_path, ios::in | ios::binary | ios::ate);
+	ifstream file(file_path + ".maze", ios::in | ios::binary | ios::ate);
 	int x;
 	int y;
 	Coordinate BeginMaze;
 	Coordinate EndMaze;
 	vector<vector<int>>  Maze;
+	// Read in the maze data from the maze file
 	if (file.is_open())
 	{
 		file.seekg(0, ios::beg);
@@ -66,7 +67,7 @@ int main()
 	}
 
 
-
+	// Hard coded testing maze
 	/*vector<vector<int>>  Maze = //Y //X
 	{
 		{ 1,1,1,1,1,1,1},
