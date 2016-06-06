@@ -5,6 +5,7 @@
 #include <SFML/System.hpp>
 #include "Graphics.h"
 #include <SFML/Audio.hpp>
+#include <fstream>
 
 using namespace std;
 
@@ -23,13 +24,50 @@ int main()
 		music.play();
 	}
 
+	cout << "Enter the path cycle speed in milliseconds. (How long to stay on one path)" << endl;
 	// Path cycle speed in milliseconds. As in 1 every path_cycle_speed ms
 	// NOTE: This does lock up the graphcs thread so don't put it too high or you won't be able to close graphics window
 	// PS: too high would be like 1000. If you're under 500 you're okay.
-	path_cycle_speed = 20;
+	cin >> path_cycle_speed;
+	cout << "Enter the file name for the maze " << endl;
+	string file_path;
+	cin >> file_path;
+	ifstream file(file_path, ios::in | ios::binary | ios::ate);
+	int x;
+	int y;
+	Coordinate BeginMaze;
+	Coordinate EndMaze;
+	vector<vector<int>>  Maze;
+	if (file.is_open())
+	{
+		file.seekg(0, ios::beg);
+		file.read((char *)&x, sizeof(x));
+		file.read((char *)&y, sizeof(y));
+		file.read((char *)&BeginMaze, sizeof(BeginMaze));
+		file.read((char *)&EndMaze, sizeof(EndMaze));
+		for (int i = 0; i < y; i++)
+		{
+			vector<int> tempx;
+			for (int z = 0; z < x; z++)
+			{
+				int temp_var;
+				file.read((char *)&temp_var, sizeof(temp_var));
+				tempx.push_back(temp_var);
+			}
+			Maze.push_back(tempx);
+		}
+	}
+	else
+	{
+		cout << "Could not find file. Exiting" << endl;
+		system("pause");
+		music.stop();
+		return -1;
+	}
 
 
-	vector<vector<int>>  Maze = //Y //X
+
+	/*vector<vector<int>>  Maze = //Y //X
 	{
 		{ 1,1,1,1,1,1,1},
 		{ 0,1,0,1,0,0,0 },
@@ -53,10 +91,7 @@ int main()
 		{ 0,1,1,1,1,1,1 },
 		{ 0,1,0,1,0,0,0 },
 		{ 0,1,1,1,1,1,1 }
-	};
-
-	Coordinate BeginMaze = Coordinate(0, 0);
-	Coordinate EndMaze = Coordinate(6, 21);
+	};*/
 
 	// Setup a new graphics object
 	Graphics * maze_gui = new Graphics(Maze, BeginMaze, EndMaze);

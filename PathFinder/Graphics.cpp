@@ -114,7 +114,7 @@ void Graphics::update()
 				squares[square_counter]->setFillColor(Color::Black);
 			}
 			x++;
-			if (x > 6)
+			if (x == Maze[0].size())
 			{
 				y++;
 				x = 0;
@@ -185,7 +185,7 @@ void Graphics::update()
 					squares[square_counter]->setFillColor(Color::Black);
 				}
 				x++;
-				if (x > 6)
+				if (x == Maze[0].size())
 				{
 					y++;
 					x = 0;
@@ -208,7 +208,7 @@ void Graphics::update()
 					squares[square_counter]->setFillColor(Color::Black);
 				}
 				x++;
-				if (x > 6)
+				if (x == Maze[0].size())
 				{
 					y++;
 					x = 0;
