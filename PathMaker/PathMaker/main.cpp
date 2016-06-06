@@ -40,10 +40,13 @@ int main()
 	Coordinate * endCoord = new Coordinate();
 	int x;
 	int y;
+	std::string filename;
 	std::cout << "How many squares in the x direction do you want?" << std::endl;
 	std::cin >> x;
 	std::cout << "How many squares in the y direction do you want?" << std::endl;
 	std::cin >> y;
+	std::cout << "Give your maze a name!" << std::endl;
+	std::cin >> filename;
 	std::cout << "Right click to set start point. Middle click to set end point." << std::endl;
 	std::cout << "Single left click to create maze place" << std::endl;
 	std::cout << "Close to save" << std::endl;
@@ -220,7 +223,7 @@ int main()
 		}
 		window.display();
 	}
-	std::ofstream file("NEW_MAZE.maze", std::ios::out | std::ios::binary);
+	std::ofstream file(filename + ".maze", std::ios::out | std::ios::binary);
 	file.seekp(std::ios::beg);
 	file.write((char *)&(x), sizeof(x));
 	file.seekp(0, std::ios::end);
