@@ -6,9 +6,9 @@
 3. Copy these DLL's in each root from SFML 2.3.2/bin
 
 ``* openal32.dll
-``* sfml-audio-d-2.dll
-``* sfml-graphics-d-2.dll
-``* sfml-system-d-2.dll
+``* sfml-audio-d-2.dll``
+``* sfml-graphics-d-2.dll``
+``* sfml-system-d-2.dll``
 ``* sfml-window-d-2.dll
 
 4. Make sure the dll's and SFML library folders are in the project roots.
