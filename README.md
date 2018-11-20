@@ -1,4 +1,6 @@
-<<<<<<< HEAD
+# pathfinder
+Maze solver and creator
+
 # SETUP!
 
 ## SFML Library
@@ -15,7 +17,3 @@
 4. Make sure the dll's and SFML library folders are in the project roots.
 
 # Made by Jacob Priddy and John Dodd
-=======
-# pathfinder
-Maze solver and creater
->>>>>>> 999cc703a1b1909263525e2f6fa77e42eb2a6f3b
